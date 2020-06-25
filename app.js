@@ -60,7 +60,9 @@ app.post('/users/register', (req, res) => {
           confirmPassword
         })
       }
-      return bcrypt.hash(password, bcrypt.genSalt(10))
+      return bcrypt
+        .genSalt(10)
+        .then(salt => bcrypt.hash(password, salt))
         .then(hash => User.create({
           name,
           email,
