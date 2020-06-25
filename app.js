@@ -1,3 +1,4 @@
+const passport = require('passport')
 const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
@@ -10,6 +11,7 @@ const db = require('./models')
 const Todo = db.Todo
 const User = db.User
 const session = require('express-session')
+const usePassport = require('./config/passport')
 
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname : 'hbs'}))
@@ -20,6 +22,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+usePassport(app)
 app.use(bodyParser.urlencoded({ extended: true}))
 app.use(methodOverride('_method'))
 
@@ -31,11 +34,10 @@ app.get('/' , (req, res) => {
     .then(todos => res.render('index', { todos }))
     .catch(error => res.status(422).json(error))
 })
-
 //login register
 
 app.get('/users/login', (req, res) => {
-  res.render('login')
+  res.render('login') 
 })
 
 app.get('/users/register', (req, res) => {
@@ -43,9 +45,10 @@ app.get('/users/register', (req, res) => {
   
 })
 
-app.post('/users/login', (req, res) => {
-  res.send('login')
-})
+app.post('/users/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
+}))
 
 app.post('/users/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
