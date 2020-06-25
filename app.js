@@ -19,11 +19,11 @@ app.get('/' , (req, res) => {
 //login register
 
 app.get('/users/login', (req, res) => {
-  res.send('login')
+  res.render('login')
 })
 
 app.get('/users/register', (req, res) => {
-  res.send('register')
+  res.render('register')
 })
 
 app.post('/users/login', (req, res) => {
