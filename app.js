@@ -16,6 +16,29 @@ app.get('/' , (req, res) => {
   res.send('hihi')
 })
 
+//login register
+
+app.get('/users/login', (req, res) => {
+  res.send('login')
+})
+
+app.get('/users/register', (req, res) => {
+  res.send('register')
+})
+
+app.post('/users/login', (req, res) => {
+  res.send('login')
+})
+
+app.post('/users/register', (req, res) => {
+  res.send('register')
+})
+
+app.get('/users/logout', (req, res) => {
+  res.send('logout')
+})
+
+
 app.listen(PORT, () => {
   console.log('now is running')
 })
