@@ -9,9 +9,17 @@ const PORT = 3000
 const db = require('./models')
 const Todo = db.Todo
 const User = db.User
+const session = require('express-session')
+
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname : 'hbs'}))
 app.set('view engine', 'hbs')
+
+app.use(session({
+  secret: 'ThisIsSecret',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use(bodyParser.urlencoded({ extended: true}))
 app.use(methodOverride('_method'))
 
@@ -41,8 +49,26 @@ app.post('/users/login', (req, res) => {
 
 app.post('/users/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
-  User.create({ name, email, password })
-    .then(user => res.redirect('/'))
+  User.findOne({ where: { email } })
+    .then(user => {
+      if (user) {
+        console.log('User already exists')
+        return res.render('register', {
+          name,
+          email,
+          password,
+          confirmPassword
+        })
+      }
+      return bcrypt.hash(password, bcrypt.genSalt(10))
+        .then(hash => User.create({
+          name,
+          email,
+          password: hash
+        }))
+        .then(() => res.redirect('/'))
+        .catch(err => console.log(err))
+    })
 })
 
 app.get('/users/logout', (req, res) => {
