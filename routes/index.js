@@ -6,8 +6,8 @@ const todo = require('./modules/todo')
 const auth = require('../middleware/auth').authenticator
 
 router.use('/users', user)
-router.use('/todos',  todo)
-router.use('/',  home)
+router.use('/todos', auth, todo)
+router.use('/', auth, home)
 
 
 

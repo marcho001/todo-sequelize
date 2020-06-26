@@ -25,7 +25,6 @@ router.put('/:id', (req, res) => {
   const { name, isDone } = req.body
   return Todo.findByPk(id)
     .then(todo => {
-      console.log(todo)
       todo.name = name,
       todo.isDone = isDone === 'on'
       return todo.save()
@@ -35,11 +34,21 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
+  console.log(req.user)
   const id = req.params.id
   return Todo.findByPk(id)
     .then(todo => todo.destroy())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
+
+router.post('/', (req, res) => {
+  const name = req.body.name
+  const UserId = req.user.id
+  return Todo.create({ name, UserId })
+    .then(() => res.redirect('/'))
+    .catch(error => console.log('create', error))
+})
+
 
 module.exports = router
