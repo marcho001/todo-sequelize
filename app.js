@@ -5,8 +5,6 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const routes = require('./routes')
 const PORT = 3000
-const db = require('./models')
-const Todo = db.Todo
 const session = require('express-session')
 const usePassport = require('./config/passport')
 
