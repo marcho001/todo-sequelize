@@ -25,14 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true}))
 app.use(methodOverride('_method'))
 app.use(routes)
 
-app.get('/' , (req, res) => {
-  return Todo.findAll({
-    raw: true,
-    nest: true
-  })
-    .then(todos => res.render('index', { todos }))
-    .catch(error => res.status(422).json(error))
-})
+
 //login register
 
 
