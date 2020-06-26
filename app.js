@@ -26,20 +26,6 @@ app.use(methodOverride('_method'))
 app.use(routes)
 
 
-//login register
-
-
-
-//detail
-
-app.get('/todos/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findByPk(id)
-    .then(todo => res.render('detail', { todo: todo.toJSON() })
-    )
-    .catch(error => console.log(error))
-})
-
 app.listen(PORT, () => {
   console.log('now is running')
 })
