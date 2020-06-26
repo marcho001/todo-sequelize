@@ -1,17 +1,15 @@
-const passport = require('passport')
 const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcryptjs')
 const methodOverride = require('method-override')
-// const routes = require('./routes')
+const routes = require('./routes')
 const PORT = 3000
 const db = require('./models')
 const Todo = db.Todo
-const User = db.User
 const session = require('express-session')
 const usePassport = require('./config/passport')
+
 
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname : 'hbs'}))
@@ -25,6 +23,7 @@ app.use(session({
 usePassport(app)
 app.use(bodyParser.urlencoded({ extended: true}))
 app.use(methodOverride('_method'))
+app.use(routes)
 
 app.get('/' , (req, res) => {
   return Todo.findAll({
@@ -36,49 +35,7 @@ app.get('/' , (req, res) => {
 })
 //login register
 
-app.get('/users/login', (req, res) => {
-  res.render('login') 
-})
 
-app.get('/users/register', (req, res) => {
-  res.render('register')
-  
-})
-
-app.post('/users/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/users/login'
-}))
-
-app.post('/users/register', (req, res) => {
-  const { name, email, password, confirmPassword } = req.body
-  User.findOne({ where: { email } })
-    .then(user => {
-      if (user) {
-        console.log('User already exists')
-        return res.render('register', {
-          name,
-          email,
-          password,
-          confirmPassword
-        })
-      }
-      return bcrypt
-        .genSalt(10)
-        .then(salt => bcrypt.hash(password, salt))
-        .then(hash => User.create({
-          name,
-          email,
-          password: hash
-        }))
-        .then(() => res.redirect('/'))
-        .catch(err => console.log(err))
-    })
-})
-
-app.get('/users/logout', (req, res) => {
-  res.send('logout')
-})
 
 //detail
 
