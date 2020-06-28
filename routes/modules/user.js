@@ -42,8 +42,9 @@ router.post('/register', (req, res) => {
   User.findOne({ where: { email } })
     .then(user => {
       if (user) {
-        console.log('User already exists')
+        errors.push({ message: '此帳號已註冊過'})
         return res.render('register', {
+          errors,
           name,
           email,
           password,
